@@ -1,0 +1,99 @@
+<!--
+******************************************************************************************
+****  AUTHOR: Kristin Goodman (www.kgoodmanwebsolutions.com)                          ****
+****  DATE: March 6, 2017                                                             ****
+****  DESCRIPTION: These files receive a CSV file of names (one column of data) and   ****
+****  will randomly pick a winner and display the winner's name. Additionally, it     ****
+****  removes the winner so they can't win again. This also keeps track of who has    ****
+****  already been called.                                                            ****
+******************************************************************************************
+-->
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+
+    <title>Randomizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="http://kgoodmanwebsolutions.com/randomizer/logo.jpg">
+
+    <link rel="stylesheet" href="extra/Randomizer_files/Supernice.css">
+    <link rel="stylesheet" href="extra/Randomizer_files/styles.css">
+    <link href="extra/Randomizer_files/css.css" rel="stylesheet">
+
+    <script type="text/javascript" src="extra/Randomizer_files/jquery.js" async></script>
+
+    <script src="js/random.js" type="text/javascript" async></script>
+
+    <!--[if li IE 9]>
+    <script src="http://html5shiv.googlecode.com/sn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div id="header" class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2">
+          <img id="main-img" src="extra/Randomizer_files/tshirtexe.png" alt="Women in Business">
+        </div>
+        <div class="col-sm-8">
+          <h1 class="light-text">Major Shopping Event Randomizer</h1>
+        </div>
+        <div class="col-sm-2">
+          <form id="file-form">
+            <label class="btn btn-primary" for="my-file-selector">
+              <input id="my-file-selector" type="file" style="display:none;" onchange="$('#upload-file-info').html($(this).val()); handleFiles(this.files);">
+                Choose File
+              </label>
+              <a class="help" onclick="openModal('helpModal')" href="#">Help</a>
+              <span class="label label-info" id="upload-file-info"></span>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="helpModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('helpModal')">×</span>
+        <h3>Help</h3>
+        <p>To use the winner randomizer, upload a CSV file that contains one column with
+        the names for the winner(s) to be chosen from.</p>
+        <p>When a winner is selected, they cannot be chosen another time.</p>
+        <p>Previously selected winners will be displayed at the bottom of the page.</p>
+      </div>
+    </div>
+
+    <div id="errorModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('errorModal')">×</span>
+        <h3>ERROR</h3>
+        <p>Missing file with possible winner names. Please upload a file and try again.</p>
+      </div>
+    </div>
+
+    <div id="emptyList" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('emptyList')">×</span>
+        <h3>ERROR</h3>
+        <p>Everyone has already won. Upload a new file to randomize more winners.</p>
+      </div>
+    </div>
+
+    <div id="banner-area" class="container-fluid">
+      <div class="jumbotron">
+        <h1 id="winners-name">Winner's name displayed here</h1>
+        <br><br><br>
+        <p><a onclick="randomizeWinner()" class="btn btn-primary btn-lg" href="#" role="button">Next Winner</a></p>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div id="all-winners" class="col-sm-12">
+        </div>
+      </div>
+    </div>
+  
+</body></html>
