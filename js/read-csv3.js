@@ -1,10 +1,10 @@
 /*********
  * 
- * Most recent JS as of 4/28/2019
+ * Most recent JS as of 4/29/2019
  * 
  ********/
 let ipageIsbnList;
-let tlcTitlesIsbnList;
+const tlcTitlesIsbnList = [];
 
 document.getElementById("input-form").reset();
 
@@ -70,23 +70,36 @@ const handleFiles = (files) => {
   };
 
   const dataProcess = (file, fileType) => {
-
     if(fileType == "csv") {
         ipageIsbnList = file.match(/\b\d{9,13}X?\b/g);
     } else {
-        tlcTitlesIsbnList = file.match(/\b\d{9,13}X?\b/g);
+      const regexCode = /(\d{9,13}[xX]*)\s+[\w\s]*\d+\s+(["\w\s\/';,:\[\]!=?\-&\(\)]+)\]*\.*["]*/g;
+      let results;
+
+      while(results = regexCode.exec(file)) {
+        let book = {
+          isbn: results[1],
+          title: results[2]
+        };
+        tlcTitlesIsbnList.push(book);
+      }
     }
     compareIsbnLists();
   };
 
   const compareIsbnLists = () => {
-      if(ipageIsbnList && tlcTitlesIsbnList) {
-        console.log("both have data");
-        console.log(ipageIsbnList);
-        console.log(tlcTitlesIsbnList);
-      } else {
-          console.log("one or none have data");
-          console.log(ipageIsbnList);
-          console.log(tlcTitlesIsbnList);
+      if(ipageIsbnList && tlcTitlesIsbnList.length > 0) {
+
+        for(let i = 0; i < ipageIsbnList.length; i++) {
+          for(let j = 0; j < tlcTitlesIsbnList.length; j++) {
+            if(ipageIsbnList[i] == tlcTitlesIsbnList[j].isbn) {
+              console.log("match found: " + tlcTitlesIsbnList[j].isbn + " Title: " + tlcTitlesIsbnList[j].title);
+            }
+          }
+        }
+
+        // console.log("From the Ipage CSV the first element ISBN is: \n" + ipageIsbnList[0]);
+        // console.log("From the TLC CSV/XLS the first element ISBN is: \n" +tlcTitlesIsbnList[0].isbn);
+        // console.log("From the TLC CSV/XLS the first element title is: \n" +tlcTitlesIsbnList[0].title);
       }
   };
