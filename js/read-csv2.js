@@ -1,10 +1,38 @@
+let ipageIsbnList;
+let tlcTitlesIsbnList;
+
+/*
+const test1 = (str) => {
+  return test2(str);
+};
+
+const test2 = (str) => {
+  let newString = str + 'a';
+  return test3(newString);
+};
+
+const test3 = (str) => {
+  return str + " final";
+};
+
+*/
+
+let s = `
+
+"PO#","Order by ipage login","Date Ordered","Time Ordered","Order type","Shipping Instructions","Warehouse Selection","Vendor","Product Code","EAN","Title","Author","Binding","Publisher","Pub Date","Price","PO# (line level)","Confirmation Status","Backorder","Backorder Cancellation Date","Quantity Ordered","Quantity Shipped","Quantity Backordered","Quantity Cancelled","Attention Line","Discount","Notes","Indexed","Imprint Symbol","Imprint Font","Imprint Font Color","Position","Imprint 1st Line","Imprint 2nd Line","Imprint 3rd Line","Imprint 4th Line"
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","068807166X          ","9780688071660","Russell Sprouts","Hurwitz, Johanna","Hardcover","Morrow Junior Books","09/01/87",13.93,"","OUT OF PRINT","Y","05-JAN-19",2,0,0,2,emelendez1,"10.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688087922          ","9780688087920","Russell and Elisa","Hurwitz, Johanna","Hardcover","Morrow Junior Books","09/01/89",11.95,"","NOT STOCKED BY INGRAM","Y","05-JAN-19",2,0,0,2,emelendez1,"0.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688090958          ","9780688090951","Superduper Teddy","Hurwitz, Johanna","Hardcover","Morrow Junior Books","05/01/90",12.88,"","NOT STOCKED BY INGRAM","Y","05-JAN-19",2,0,0,2,emelendez1,"0.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688099467          ","9780688099466","Nora and Mrs. Mind-Your-Own-Business","Hurwitz, Johanna","Hardcover","Morrow Junior Books","04/01/91",12.88,"","NOT STOCKED BY INGRAM","Y","05-JAN-19",2,0,0,2,emelendez1,"0.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688151892          ","9780688151898","Ever-Clever Elisa","Hurwitz, Johanna","Hardcover","HarperCollins Publishers","09/26/97",15,"","OUT OF STOCK INDEFINITELY","Y","05-JAN-19",2,0,0,2,emelendez1,"45.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688221734          ","9780688221737","New Neighbors for Nora","Hurwitz, Johanna","Hardcover","William Morrow & Company","03/01/79",11.95,"","NOT STOCKED BY INGRAM","Y","05-JAN-19",2,0,0,2,emelendez1,"0.00","","N","","","","","","","",""
+"03110618","emelendez1","11/06/2018","09:46:19","QUOTATION SERVICE ONLY","Default Ingram Shipping Instructions","DC Pairs","INGRAM","0688320570          ","9780688320577","Busybody Nora","Hurwitz, Johanna","Hardcover","William Morrow & Company","04/01/90",11.88,"","NOT STOCKED BY INGRAM","Y","05-JAN-19",2,0,0,2,emelendez1,"0.00","","N","","","","","","","",""
+
+`;
+
+// console.log(s);
+
 document.getElementById("input-form").reset();
-let multiArr = [
-    [1, 2],
-    [3, 4],
-    [5, 6]
-];
-console.log(multiArr);
 
 const fileNumCheck = (inputFiles) => {
     if(inputFiles.length < 2) {
@@ -19,7 +47,7 @@ function handleFiles(files) {
     // Check for the various File API support.
     if (window.FileReader) {
         // FileReader are supported.
-        getAsText(files[0]);
+        getAsText(files[1]);
     } else {
         alert('FileReader are not supported in this browser.');
     }
@@ -28,6 +56,7 @@ function handleFiles(files) {
   //Creates reader object, reads uploaded doc
   function getAsText(fileToRead) {
     var reader = new FileReader();
+    //var fileType below will create a string of the file type; i.e. CSV || XLS
     const fileType = fileToRead.name.substr(fileToRead.name.length-3);
     
     // Read file into memory as UTF-8      
@@ -35,22 +64,24 @@ function handleFiles(files) {
 
     //Handle errors load
     if(fileType === "csv") {
-        reader.onload = csvLoadHandler;
+      console.log("entered csv loader");
+        reader.onload = loadHandler;
     } else if (fileType === "xls") {
+      console.log("entered xls loader");
         reader.onload = xlsLoadHandler;
     } else {
         reader.onerror = errorHandler;
     }
   }
 
-  function csvLoadHandler(event) {
+  function loadHandler(event) {
     var csv = event.target.result;
-    processDataTest(csv);
+    dataProcess(csv);
   }
 
   function xlsLoadHandler(event) {
-    var csv = event.target.result;
-    processDataTest(csv);
+    var xls = event.target.result;
+    dataProcess(xls);
   }
 
   function processData(csv) {
@@ -72,7 +103,8 @@ function handleFiles(files) {
   }
 
   function processDataTest(csv) {
-    console.log("CSV Contents: ");
+    // console.log("CSV Contents: ");
+    // console.log("raw CSV type is: " + typeof csv);
     // console.log(csv);
     var allTextLines = csv.split(/\r\n|\n/);
     // console.log(allTextLines[0]);
@@ -92,10 +124,22 @@ function handleFiles(files) {
         let data = lines[i].split("\t");
         newArr.push(data);
     } */
-  console.log(lines);
+  // console.log(lines);
 //   drawOutput(lines);
   
 }
+
+const dataProcess = (csv) => {
+  const matches = csv.match(/\b\d{9,13}X?\b/g);
+  console.log("inside new ProcessData func");
+  console.log(matches);
+};
+
+const xlsDataProcess = (xls) => {
+  const matches = xls.match(/\b\d{9,13}X?\b/g);
+  console.log("inside new ProcessData func");
+  console.log(matches);
+};
 
 
   //if your csv file contains the column names as the first line
@@ -122,7 +166,7 @@ function handleFiles(files) {
 
   function errorHandler(evt) {
     if(evt.target.error.name == "NotReadableError") {
-        alert("Canno't read file !");
+        alert("Cannot read file!");
     }
   }
 
