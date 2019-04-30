@@ -3,6 +3,60 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <title>HTML5 File API</title>
   <script type="text/javascript" src="js/read-csv3.js" async></script>
+
+  <!-- <link rel="stylesheet" href="css/css.css"> -->
+
+  <style>
+    * {
+  font-family: sans-serif; /* Change your font family */
+}
+
+#table-div {
+  display: none;
+  justify-content: center;
+  
+}
+
+.content-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.content-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
+}
+
+.content-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.content-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.content-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+  </style>
 </head>
 <body >
   <div>
@@ -21,10 +75,13 @@
       </fieldset>
     </form>
 
-    <div id="output">
-    </div>
-
-    <div id="output2">
+    <div id="table-div">
+      <table id="duplicate-table" class="content-table">
+          <tr class="active-row">
+            <td>ISBN</td>
+            <td>TITLE</td>
+          </tr>
+      </table>
     </div>
 </body>
 </html>

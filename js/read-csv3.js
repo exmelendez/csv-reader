@@ -88,18 +88,27 @@ const handleFiles = (files) => {
   };
 
   const compareIsbnLists = () => {
-      if(ipageIsbnList && tlcTitlesIsbnList.length > 0) {
+    if(ipageIsbnList && tlcTitlesIsbnList.length > 0) {
+        const table = document.getElementById("duplicate-table");
+        let dupCount = 0;
 
         for(let i = 0; i < ipageIsbnList.length; i++) {
           for(let j = 0; j < tlcTitlesIsbnList.length; j++) {
             if(ipageIsbnList[i] == tlcTitlesIsbnList[j].isbn) {
-              console.log("match found: " + tlcTitlesIsbnList[j].isbn + " Title: " + tlcTitlesIsbnList[j].title);
+                dupCount++;
+                let row = table.insertRow(-1);
+                row.setAttribute("class", "active-row");
+                let col1 = row.insertCell(0);
+                let col2 = row.insertCell(1);
+
+                col1.innerHTML = tlcTitlesIsbnList[j].isbn;
+                col2.innerHTML = tlcTitlesIsbnList[j].title;
             }
           }
         }
-
-        // console.log("From the Ipage CSV the first element ISBN is: \n" + ipageIsbnList[0]);
-        // console.log("From the TLC CSV/XLS the first element ISBN is: \n" +tlcTitlesIsbnList[0].isbn);
-        // console.log("From the TLC CSV/XLS the first element title is: \n" +tlcTitlesIsbnList[0].title);
+       
+        if(dupCount > 0) {
+            document.getElementById("table-div").style.display = "flex";
+        }
       }
   };
